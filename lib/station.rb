@@ -10,6 +10,10 @@ class Station < Agent
     @trains = []
   end
 
+  def assign_to(train)
+    DB.exec("INSERT INTO stops (station_id, train_id) VALUES ('#{@id}', '#{train.id}') RETURNING id;")
+  end
+
   def trains
     results = DB.exec("SELECT *
               FROM trains JOIN stops
@@ -23,4 +27,5 @@ class Station < Agent
     end
     @trains
   end
+
 end
