@@ -24,6 +24,10 @@ class Agent
     @id = save.first['id'].to_i #potential issue here
   end
 
+  def == another_object
+    self.name == another_object.name
+  end
+
   def delete
     DB.exec("DELETE FROM #{self.table} WHERE id = #{self.id};")
   end

@@ -8,8 +8,4 @@ class Station < Agent
     @id = attributes[:id]
     @table = "stations"
   end
-
-  def == another_station
-    self.name == another_station.name
-  end
 end
