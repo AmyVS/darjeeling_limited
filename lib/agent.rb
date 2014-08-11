@@ -2,10 +2,7 @@ require 'rubygems'
 require 'active_support/core_ext/string/inflections'
 
 class Agent
-  # def update
 
-
-  # end
   def self.all
     table_name = self.to_s.downcase.pluralize
     results = DB.exec("SELECT * FROM #{table_name};")
@@ -32,4 +29,11 @@ class Agent
     DB.exec("DELETE FROM #{self.table} WHERE id = #{self.id};")
   end
 
+  def self.show_list
+    list = []
+    self.all.each_with_index do |object, index|
+      list << "#{index+1}. #{object.name}"
+    end
+    list
+  end
 end

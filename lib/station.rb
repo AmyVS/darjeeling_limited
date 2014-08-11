@@ -5,7 +5,7 @@ class Station < Agent
 
   def initialize attributes
     @name = attributes[:name]
-    @id = attributes[:id]
+    @id = attributes[:id].to_i
     @table = "stations"
   end
 end

@@ -21,4 +21,13 @@ describe Station do
     test_station1.delete
     expect(Station.all).to eq [test_station2]
   end
+
+  it 'lists all stations in the table' do
+    test_station1 = Station.new({:name => 'New Delhi'})
+    test_station1.save
+    test_station2 = Station.new({:name => 'Kashmir'})
+    test_station2.save
+    expect(Station.show_list).to eq ['1. New Delhi', '2. Kashmir']
+  end
+
 end

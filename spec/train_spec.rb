@@ -22,4 +22,12 @@ describe Train do
     test_train1.delete
     expect(Train.all).to eq [test_train2]
   end
+
+  it 'lists all trains in the table' do
+    test_train1 = Train.new({:name => 'Oolong'})
+    test_train1.save
+    test_train2 = Train.new({:name => 'Jasmine'})
+    test_train2.save
+    expect(Train.show_list).to eq ['1. Oolong', '2. Jasmine']
+  end
 end
