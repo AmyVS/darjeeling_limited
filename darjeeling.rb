@@ -78,6 +78,7 @@ def train_menu who
   when :conductor
     # conductor_options
     puts "Enter 'a' to add a station to this train line"
+    puts "Enter 'r' to remove a station from this train line"
     puts "Enter any other key to go back to the main menu"
     user_choice = gets.chomp
     case user_choice
@@ -102,6 +103,7 @@ def add_station
   @current_train.assign_to(@current_station)
 
   puts "#{@current_station.name} has been added successfully to #{@current_train.name}. wOOt!"
+  binding.pry
   puts "Would you like to add another? y/n"
   user_input = gets.chomp
   if user_input == 'y'

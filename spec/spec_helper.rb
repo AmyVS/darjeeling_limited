@@ -4,6 +4,7 @@ require 'pry'
 
 require 'train'
 require 'station'
+require 'stop'
 
 DB = PG.connect({:dbname => 'darjeeling_test'})
 
