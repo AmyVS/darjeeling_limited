@@ -18,7 +18,7 @@ class Agent
 
   def save
     save = DB.exec("INSERT INTO #{self.table} (name) VALUES ('#{self.name}') RETURNING id;")
-    @id = save.first['id'].to_i #potential issue here
+    @id = save.first['id'].to_i
   end
 
   def == another_object
