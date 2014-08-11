@@ -30,4 +30,14 @@ describe Train do
     test_train2.save
     expect(Train.show_list).to eq ['1. Oolong', '2. Jasmine']
   end
+
+  it 'assigns a train to a station' do
+    test_train = Train.new({:name => 'Oolong'})
+    test_train.save
+    test_station = Station.new({:name => 'New Delhi'})
+    test_station.save
+    test_train.assign_to(test_station)
+    expect(test_station.trains).to eq [test_train]
+  end
+
 end
