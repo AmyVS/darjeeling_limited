@@ -12,4 +12,13 @@ describe Station do
     test_station.save
     expect(Station.all).to eq [test_station]
   end
+
+  it 'deletes the station from the database' do
+    test_station1 = Station.new({:name => 'New Delhi'})
+    test_station1.save
+    test_station2 = Station.new({:name => 'Kashmir'})
+    test_station2.save
+    test_station1.delete
+    expect(Station.all).to eq [test_station2]
+  end
 end
