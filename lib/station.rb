@@ -1,7 +1,7 @@
 require './lib/agent'
 
 class Station < Agent
-  attr_reader :name, :id, :table, :trains
+  attr_accessor :name, :id, :table, :trains
 
   def initialize attributes
     @name = attributes[:name]

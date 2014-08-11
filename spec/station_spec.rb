@@ -39,4 +39,11 @@ describe Station do
     expect(test_train.stations).to eq [test_station]
   end
 
+  it 'changes a station name' do
+    test_station = Station.new({:name => 'New Delhi'})
+    test_station.save
+    test_station.name = 'Mumbai'
+    expect(test_station.name).to eq 'Mumbai'
+  end
+
 end

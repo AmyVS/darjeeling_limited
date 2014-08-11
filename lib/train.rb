@@ -1,7 +1,7 @@
 require './lib/agent'
 
 class Train < Agent
-  attr_reader :name, :id, :table, :stations
+  attr_accessor :name, :id, :table, :stations
 
   def initialize attributes
     @name = attributes[:name]
@@ -27,6 +27,5 @@ class Train < Agent
     end
     @stations
   end
-
 
 end

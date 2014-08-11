@@ -40,4 +40,11 @@ describe Train do
     expect(test_station.trains).to eq [test_train]
   end
 
+  it 'updates the train name' do
+    test_train = Train.new({:name => 'Oolong'})
+    test_train.save
+    test_train.name = 'Chai'
+    expect(test_train.name).to eq 'Chai'
+  end
+
 end
