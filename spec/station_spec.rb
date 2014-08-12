@@ -59,4 +59,14 @@ describe Station do
     expect(test_station.trains).to eq [test_train1]
   end
 
+  it 'adds a train arrival time to a station' do
+    test_station = Station.new({:name => 'New Delhi'})
+    test_station.save
+    test_train = Train.new({:name => 'Oolong'})
+    test_train.save
+    test_train.assign_to(test_station)
+    test_train.set_time({:station_id => test_station.id, :time => '12:00:00'})
+    expect(test_train.time_at(test_station)).to eq '12:00:00'
+  end
+
 end
