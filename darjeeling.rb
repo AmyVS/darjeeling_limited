@@ -7,7 +7,6 @@ DB = PG.connect({:dbname => 'darjeeling'})
 
 @current_train = nil
 @current_station = nil
-@current_stop = nil
 
 def who_are_you
 
@@ -29,6 +28,9 @@ def who_are_you
 end
 
 def menu who
+  @current_train = nil
+  @current_station = nil
+
   puts "\n\nWhich list would you like to refer to?"
   puts "Press 't' for trains, 's' for stations, or any other key to exit."
   user_input = gets.chomp
@@ -43,21 +45,6 @@ def menu who
   end
 end
 
-# def conductor_menu
-#   puts "\n\nWhich list would you like to access?"
-#   puts "Press 't' for trains, 's' for stations, or any other key to exit."
-#   user_input = gets.chomp
-
-#   if user_input == 't'
-#     train_menu(:conductor)
-#   elsif user_input == 's'
-#     station_menu(:conductor)
-#   else
-#     puts "\nSee you next time!"
-#     exit
-#   end
-# end
-
 def train_menu who
 
   puts "All Trains:"
@@ -68,8 +55,8 @@ def train_menu who
   @current_train = Train.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid train. Please try again.\n\n"
   train_menu(:passenger)}
 
-  @current_train.stations.each do |station|
-    puts "#{station.name}"
+  @current_train.stations.each_with_index do |station, index|
+    puts "#{index+1}. #{station.name}"
   end
 
   case who
@@ -85,7 +72,7 @@ def train_menu who
     when 'a'
       add_station
     when 'r'
-      remove_stop
+      remove_stop(:train)
     else
       puts "Returning to the main menu"
       menu(:conductor)
@@ -127,8 +114,8 @@ def station_menu who
   @current_station = Station.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid station. Please try again.\n\n"
   station_menu(who)}
 
-  @current_station.trains.each do |train|
-    puts "#{train.name}"
+  @current_station.trains.each_with_index do |train, index|
+    puts "#{index+1}. #{train.name}"
   end
 
   case who
@@ -144,7 +131,7 @@ def station_menu who
     when 'a'
       add_train
     when 'r'
-      remove_stop
+      remove_stop(:station)
     else
       puts "Returning to the main menu"
       menu(:conductor)
@@ -175,20 +162,29 @@ def add_train
   end
 end
 
-def remove_stop
+def remove_stop which_menu
+  case which_menu
+  when :station
+    puts "Which train would you like to remove from #{@current_station.name}?"
+    puts "Enter the number from above."
+    user_input = gets.chomp
+    @current_train = @current_station.trains[(user_input.to_i)-1]
+    binding.pry
 
+    @current_station.delete_stop(@current_train.id)
+    puts "#{@current_train.name} has been successfully removed from stop #{@current_station.name}."
 
+  when :train
+    puts "Which station would you like to remove from #{@current_train.name}?"
+    puts "Enter the number from above."
+    user_input = gets.chomp
+    @current_station = @current_train.stations[(user_input.to_i)-1]
+    binding.pry
 
-  # if calling from station_menu
-  # @current_station is set already
-  # list the trains that go through that station
-  # have user pick the train they want to remove from the station
-
-  # if calling from train_menu
-  # @current_train is already set
-  # list the stations that the train goes through
-  # have user pick the station they want the train to skip
-
+    @current_train.delete_stop(@current_station.id)
+    puts "#{@current_station.name} stop has been successfully removed from line #{@current_train.name}."
+  end
+  menu(:conductor)
 end
 
 who_are_you
