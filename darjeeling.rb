@@ -109,7 +109,7 @@ def new_train
   input = gets.chomp
   new_train = Train.new({:name => input})
   new_train.save
-  puts "You've successfully create the new train line #{new_train.name}."
+  puts "You've successfully created the new train line #{new_train.name}."
   menu(:conductor)
 end
 
@@ -164,7 +164,6 @@ def station_menu who
   when :passenger
     puts "Pick a station line to see which trains stop there."
     puts "Enter the number for the station to look up:"
-
     user_choice = gets.chomp
     @current_station = Station.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid station. Please try again.\n\n"
     station_menu(:passenger)}
@@ -174,15 +173,28 @@ def station_menu who
     end
 
   when :conductor
-    puts "Pick a station line to see which trains stop there."
-    puts "Enter the number for the station to look up:"
+    puts "Enter 'a' to add a new station."
+    puts "Enter 'd' to delete an entire station (use with caution!)."
+    puts "Enter the station number to see which trains stop there."
 
     user_choice = gets.chomp
-    @current_station = Station.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid station. Please try again.\n\n"
-    station_menu(:conductor)}
+    if user_choice.to_i == 0
+      case user_choice
+      when 'a'
+        new_station
+      when 'd'
+        destroy_station
+      else
+        puts "Does not compute"
+        station_menu(:conductor)
+      end
+    else
+      @current_station = Station.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid station. Please try again.\n\n"
+      station_menu(:conductor)}
 
-    @current_station.trains.each_with_index do |train, index|
-      puts "#{index+1}. #{train.name}"
+      @current_station.trains.each_with_index do |train, index|
+        puts "#{index+1}. #{train.name}"
+      end
     end
 
     puts "Enter 'a' to add a train to this station."
@@ -198,6 +210,33 @@ def station_menu who
       puts "Returning to the main menu"
       menu(:conductor)
     end
+  end
+end
+
+def new_station
+  puts "Type the name of the new station:"
+  input = gets.chomp
+  new_station = Station.new({:name => input})
+  new_station.save
+  puts "You've successfully created the new station #{new_station.name}."
+  menu(:conductor)
+end
+
+def destroy_station
+  Station.show_list
+  puts "Enter the number of the station you want to destroy"
+  input = gets.chomp
+  @current_station = Station.all[(input.to_i)-1]
+  puts "This will destroy #{@current_station.name} and all its stops. Are you sure? y/n"
+  input = gets.chomp
+  case input
+  when 'y'
+    puts "#{@current_station.name} has been successfully destroyed."
+    @current_station.delete
+    menu(:conductor)
+  when 'n'
+    puts "Whew, that was close"
+    menu(:conductor)
   end
 end
 
