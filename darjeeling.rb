@@ -99,6 +99,7 @@ def train_menu who
 
       puts "\nEnter 'a' to add a station to this train line"
       puts "Enter 'r' to remove a station from this train line"
+      puts "Enter 't' to set the time of a train arrival"
       puts "Enter any other key to go back to the main menu"
       user_choice = gets.chomp
       case user_choice
@@ -106,6 +107,8 @@ def train_menu who
         add_station
       when 'r'
         remove_stop(:train)
+      when 't'
+        set_time
       else
         puts "Returning to the main menu"
         menu(:conductor)
@@ -113,6 +116,19 @@ def train_menu who
     end
   end
 end
+
+def set_time
+  puts "\n\nChoose which station for #{@current_train.name} you'd like to update."
+  station_input = gets.chomp
+  @current_station = Station.all[(station_input.to_i)]
+  puts "\nWhen does the train arrive at #{@current_station.name}? ex. 01:00:00"
+  time_input = gets.chomp
+  @current_train.set_time({:time => time_input, :station_id => @current_station.id})
+  puts "\nAdded arrival time #{time_input} of #{@current_train.name} train to #{@current_station.name} station."
+  sleep(1.5)
+  menu(:conductor)
+end
+
 
 def new_train
   puts "Type the name of the new train line:"
