@@ -7,6 +7,7 @@ DB = PG.connect({:dbname => 'darjeeling'})
 
 @current_train = nil
 @current_station = nil
+@current_stop = nil
 
 def who_are_you
 
@@ -57,7 +58,6 @@ def conductor_menu
   end
 end
 
-
 def train_menu who
 
   puts "All Trains:"
@@ -84,12 +84,13 @@ def train_menu who
     case user_choice
     when 'a'
       add_station
+    when 'r'
+      remove_stop
     else
       puts "Returning to the main menu"
       conductor_menu
     end
   end
-
 end
 
 def add_station
@@ -138,12 +139,24 @@ def station_menu who
     #do this
   conductor_options
   end
-
 end
 
-def conductor_options
+def add_train
+end
 
+def remove_stop
 
+  @current_stop.delete(train_id, station_id)
+
+  # if calling from station_menu
+  # @current_station is set already
+  # list the trains that go through that station
+  # have user pick the train they want to remove from the station
+
+  # if calling from train_menu
+  # @current_train is already set
+  # list the stations that the train goes through
+  # have user pick the station they want the train to skip
 
 end
 

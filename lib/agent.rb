@@ -27,6 +27,11 @@ class Agent
 
   def delete
     DB.exec("DELETE FROM #{self.table} WHERE id = #{self.id};")
+    if self == Train
+      DB.exec("DELETE FROM stops WHERE train_id = #{self.id};")
+    elsif self == Station
+      DB.exec("DELETE FROM stops WHERE station_id = #{self.id};")
+    end
   end
 
   def self.show_list
@@ -36,4 +41,13 @@ class Agent
     end
     list
   end
+
+  def delete_stop (other_id)
+    if self.class == Station
+      DB.exec("DELETE FROM stops WHERE train_id = #{other_id} AND station_id = #{self.id}")
+    elsif self.class == Train
+      DB.exec("DELETE FROM stops WHERE station_id = #{other_id} AND train_id = #{self.id}")
+    end
+  end
+
 end

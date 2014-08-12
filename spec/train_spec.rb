@@ -47,4 +47,17 @@ describe Train do
     expect(test_train.name).to eq 'Chai'
   end
 
+  it 'deletes the stop from the database' do
+    test_train = Train.new({:name => 'Oolong'})
+    test_train.save
+    test_station1 = Station.new({:name => 'New Delhi'})
+    test_station2 = Station.new({:name => 'Mumbai'})
+    test_station1.save
+    test_station2.save
+    test_station1.assign_to(test_train)
+    test_station2.assign_to(test_train)
+    test_train.delete_stop(test_station2.id)
+    expect(test_train.stations).to eq [test_station1]
+  end
+
 end
