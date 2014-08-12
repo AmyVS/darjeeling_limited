@@ -50,15 +50,6 @@ def train_menu who
 
   puts "All Trains:"
   puts Train.show_list
-  puts "Pick a train line to see which stations it stops at"
-  puts "Enter the number for the train to look up:"
-  user_choice = gets.chomp
-  @current_train = Train.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid train. Please try again.\n\n"
-  train_menu(:passenger)}
-
-  @current_train.stations.each_with_index do |station, index|
-    puts "#{index+1}. #{station.name}"
-  end
 
   case who
   when :passenger
@@ -71,12 +62,12 @@ def train_menu who
     @current_train.stations.each_with_index do |station, index|
       puts "#{index+1}. #{station.name}"
     end
+
   when :conductor
     puts "Enter 'a' to add a new train line,"
     puts "Enter 'd' to delete an entire train line (use with caution!)."
     puts "Enter the train number to see which stations it stops at."
     user_choice = gets.chomp
-
     if user_choice.to_i == 0
       case user_choice
       when 'a'
@@ -141,6 +132,7 @@ def destroy_train
 end
 
 def add_station
+
   puts "All Stations:"
   puts Station.show_list
   puts "Pick a station you'd like to assign #{@current_train.name} to."
@@ -167,22 +159,32 @@ def station_menu who
 
   puts "All Stations:"
   puts Station.show_list
-  puts "Pick a station line to see which trains stop there."
-  puts "Enter the number for the station to look up:"
-
-  user_choice = gets.chomp
-  @current_station = Station.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid station. Please try again.\n\n"
-  station_menu(who)}
-
-  @current_station.trains.each_with_index do |train, index|
-    puts "#{index+1}. #{train.name}"
-  end
 
   case who
   when :passenger
-    #do this
+    puts "Pick a station line to see which trains stop there."
+    puts "Enter the number for the station to look up:"
+
+    user_choice = gets.chomp
+    @current_station = Station.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid station. Please try again.\n\n"
+    station_menu(:passenger)}
+
+    @current_station.trains.each_with_index do |train, index|
+      puts "#{index+1}. #{train.name}"
+    end
+
   when :conductor
-    # conductor_options
+    puts "Pick a station line to see which trains stop there."
+    puts "Enter the number for the station to look up:"
+
+    user_choice = gets.chomp
+    @current_station = Station.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid station. Please try again.\n\n"
+    station_menu(:conductor)}
+
+    @current_station.trains.each_with_index do |train, index|
+      puts "#{index+1}. #{train.name}"
+    end
+
     puts "Enter 'a' to add a train to this station."
     puts "Enter 'r' to remove a train from this station."
     puts "Enter any other key to go back to the main menu"
