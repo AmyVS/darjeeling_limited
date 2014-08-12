@@ -120,13 +120,20 @@ end
 def set_time
   puts "\n\nChoose which station for #{@current_train.name} you'd like to update."
   station_input = gets.chomp
-  @current_station = Station.all[(station_input.to_i)]
+  @current_station = @current_train.stations[(station_input.to_i)-1]
   puts "\nWhen does the train arrive at #{@current_station.name}? ex. 01:00:00"
   time_input = gets.chomp
   @current_train.set_time({:time => time_input, :station_id => @current_station.id})
   puts "\nAdded arrival time #{time_input} of #{@current_train.name} train to #{@current_station.name} station."
-  sleep(1.5)
-  menu(:conductor)
+  puts "Press 'a' to add another time"
+  puts "Press any other key to go back to the main menu"
+  input = gets.chomp
+  case input
+  when 'a'
+    set_time
+  else
+    menu(:conductor)
+  end
 end
 
 
@@ -306,20 +313,19 @@ def remove_stop which_menu
     puts "Enter the number from above."
     user_input = gets.chomp
     @current_train = @current_station.trains[(user_input.to_i)-1]
-    binding.pry
 
     @current_station.delete_stop(@current_train.id)
     puts "\n#{@current_train.name} has been successfully removed from stop #{@current_station.name}."
-
+    sleep(1)
   when :train
     puts "\nWhich station would you like to remove from #{@current_train.name}?"
     puts "Enter the number from above."
     user_input = gets.chomp
     @current_station = @current_train.stations[(user_input.to_i)-1]
-    binding.pry
 
     @current_train.delete_stop(@current_station.id)
     puts "\n#{@current_station.name} stop has been successfully removed from line #{@current_train.name}."
+    sleep(1)
   end
   menu(:conductor)
 end
