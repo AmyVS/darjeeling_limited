@@ -67,7 +67,6 @@ describe Train do
     test_train.save
     test_train.assign_to(test_station)
     test_train.set_time({:station_id => test_station.id, :time => '12:00:00'})
-    binding.pry
     expect(test_train.time_at(test_station)).to eq '12:00:00'
   end
 end

@@ -64,7 +64,7 @@ def train_menu who
     puts "All Stations for #{@current_train.name} train:\n"
 
     @current_train.stations.each_with_index do |station, index|
-      puts "#{index+1}. #{station.name}"
+      puts "#{index+1}. #{station.name} -- #{station.time}"
     end
     puts "\nPress any key to return to the main menu"
     input = gets.chomp

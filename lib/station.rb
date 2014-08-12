@@ -1,12 +1,13 @@
 require './lib/agent'
 
 class Station < Agent
-  attr_accessor :name, :id, :table, :trains
+  attr_accessor :name, :id, :table, :trains, :time
 
   def initialize attributes
     @name = attributes[:name]
     @id = attributes[:id].to_i
     @table = "stations"
+    @time = attributes[:time]
     @trains = []
   end
 

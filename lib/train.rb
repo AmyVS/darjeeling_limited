@@ -27,11 +27,13 @@ class Train < Agent
     results = DB.exec("SELECT *
               FROM stations JOIN stops
               ON (stations.id = stops.station_id)
-              WHERE (stops.train_id = #{@id})")
+              WHERE (stops.train_id = #{@id})
+              ORDER BY (stops.time);")
     results.each do |result|
       name = result['name']
       id = result['station_id']
-      station = Station.new({:name => name, :id => id})
+      time = result['time']
+      station = Station.new({:name => name, :id => id, :time => time})
       @stations << station
     end
     @stations
