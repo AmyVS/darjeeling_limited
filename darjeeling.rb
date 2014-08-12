@@ -32,7 +32,8 @@ def menu who
   @current_train = nil
   @current_station = nil
 
-  puts "\n\nWhich list would you like to refer to?"
+  system("clear")
+  puts "Which list would you like to refer to?"
   puts "Press 't' for trains, 's' for stations, or any other key to exit."
   user_input = gets.chomp
 
@@ -48,23 +49,29 @@ end
 
 def train_menu who
 
-  puts "All Trains:"
+  puts "\n\nAll Trains:"
   puts Train.show_list
 
   case who
   when :passenger
-    puts "Pick a train line to see which stations it stops at"
+    puts "\nPick a train line to see which stations it stops at"
     puts "Enter the number for the train to look up:"
     user_choice = gets.chomp
     @current_train = Train.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid train. Please try again.\n\n"
     train_menu(:passenger)}
 
+    puts "\n\n"
+    puts "All Stations for #{@current_train.name} train:\n"
+
     @current_train.stations.each_with_index do |station, index|
       puts "#{index+1}. #{station.name}"
     end
+    puts "\nPress any key to return to the main menu"
+    input = gets.chomp
+    menu(who)
 
   when :conductor
-    puts "Enter 'a' to add a new train line,"
+    puts "\nEnter 'a' to add a new train line,"
     puts "Enter 'd' to delete an entire train line (use with caution!)."
     puts "Enter the train number to see which stations it stops at."
     user_choice = gets.chomp
@@ -83,11 +90,14 @@ def train_menu who
       @current_train = Train.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid train. Please try again.\n\n"
       train_menu(:passenger)}
 
+      puts "\n\n"
+      puts "All Stations for #{@current_train.name} train:\n"
+
       @current_train.stations.each_with_index do |station, index|
         puts "#{index+1}. #{station.name}"
       end
 
-      puts "Enter 'a' to add a station to this train line"
+      puts "\nEnter 'a' to add a station to this train line"
       puts "Enter 'r' to remove a station from this train line"
       puts "Enter any other key to go back to the main menu"
       user_choice = gets.chomp
@@ -110,6 +120,7 @@ def new_train
   new_train = Train.new({:name => input})
   new_train.save
   puts "You've successfully created the new train line #{new_train.name}."
+  sleep (1)
   menu(:conductor)
 end
 
@@ -124,25 +135,27 @@ def destroy_train
   when 'y'
     puts "#{@current_train.name} has been successfully destroyed."
     @current_train.delete
+    sleep (1)
     menu(:conductor)
   when 'n'
     puts "Whew, that was close"
+    sleep (1)
     menu(:conductor)
   end
 end
 
 def add_station
 
-  puts "All Stations:"
+  puts "\n\nAll Stations:"
   puts Station.show_list
-  puts "Pick a station you'd like to assign #{@current_train.name} to."
+  puts "\nPick a station you'd like to assign to #{@current_train.name}:"
   puts "Enter the number associated."
   user_choice = gets.chomp
   @current_station = Station.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid station. Please try again.\n\n"
   add_station }
   @current_train.assign_to(@current_station)
 
-  puts "#{@current_station.name} has been added successfully to #{@current_train.name}. wOOt!"
+  puts "\n#{@current_station.name} has been added successfully to #{@current_train.name}. wOOt!"
   puts "Would you like to add another? y/n"
   user_input = gets.chomp
   if user_input == 'y'
@@ -150,30 +163,31 @@ def add_station
   elsif user_input == 'n'
     menu(:conductor)
   else
-    puts "Does not compute. Please try again."
+    puts "\nDoes not compute. Please try again."
+    sleep (1)
     add_station
   end
 end
 
 def station_menu who
 
-  puts "All Stations:"
+  puts "\n\nAll Stations:"
   puts Station.show_list
 
   case who
   when :passenger
-    puts "Pick a station line to see which trains stop there."
+    puts "\nPick a station to see which trains stop there."
     puts "Enter the number for the station to look up:"
     user_choice = gets.chomp
     @current_station = Station.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid station. Please try again.\n\n"
     station_menu(:passenger)}
-
+    puts "\n\nAll Trains for #{@current_station.name}:"
     @current_station.trains.each_with_index do |train, index|
       puts "#{index+1}. #{train.name}"
     end
 
   when :conductor
-    puts "Enter 'a' to add a new station."
+    puts "\nEnter 'a' to add a new station."
     puts "Enter 'd' to delete an entire station (use with caution!)."
     puts "Enter the station number to see which trains stop there."
 
@@ -185,19 +199,20 @@ def station_menu who
       when 'd'
         destroy_station
       else
-        puts "Does not compute"
+        puts "\nDoes not compute"
+        sleep (1)
         station_menu(:conductor)
       end
     else
       @current_station = Station.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid station. Please try again.\n\n"
       station_menu(:conductor)}
-
+      puts "\n\nAll Trains for #{@current_station.name}:"
       @current_station.trains.each_with_index do |train, index|
         puts "#{index+1}. #{train.name}"
       end
     end
 
-    puts "Enter 'a' to add a train to this station."
+    puts "\nEnter 'a' to add a train to this station."
     puts "Enter 'r' to remove a train from this station."
     puts "Enter any other key to go back to the main menu"
     user_choice = gets.chomp
@@ -207,50 +222,54 @@ def station_menu who
     when 'r'
       remove_stop(:station)
     else
-      puts "Returning to the main menu"
+      puts "\nReturning to the main menu"
+      sleep (0.5)
       menu(:conductor)
     end
   end
 end
 
 def new_station
-  puts "Type the name of the new station:"
+  puts "\nType the name of the new station:"
   input = gets.chomp
   new_station = Station.new({:name => input})
   new_station.save
-  puts "You've successfully created the new station #{new_station.name}."
+  puts "\nYou've successfully created the new station #{new_station.name}."
+  sleep (1)
   menu(:conductor)
 end
 
 def destroy_station
   Station.show_list
-  puts "Enter the number of the station you want to destroy"
+  puts "\nEnter the number of the station you want to destroy"
   input = gets.chomp
   @current_station = Station.all[(input.to_i)-1]
-  puts "This will destroy #{@current_station.name} and all its stops. Are you sure? y/n"
+  puts "\nThis will destroy #{@current_station.name} and all its stops. Are you sure? y/n"
   input = gets.chomp
   case input
   when 'y'
-    puts "#{@current_station.name} has been successfully destroyed."
+    puts "\n#{@current_station.name} has been successfully destroyed."
     @current_station.delete
+    sleep (1)
     menu(:conductor)
   when 'n'
-    puts "Whew, that was close"
+    puts "\nWhew, that was close"
+    sleep (1)
     menu(:conductor)
   end
 end
 
 def add_train
-  puts "All Trains:"
+  puts "\n\nAll Trains:"
   puts Train.show_list
-  puts "Pick a train you'd like to assign #{@current_station.name} to."
+  puts "\nPick a train you'd like to assign to #{@current_station.name}:"
   puts "Enter the number associated."
   user_choice = gets.chomp
   @current_train = Train.all.fetch((user_choice.to_i)-1) { |i| puts "#{i+1} is not a valid train. Please try again.\n\n"
   add_train }
   @current_station.assign_to(@current_train)
 
-  puts "#{@current_train.name} has been added successfully to #{@current_station.name}. wOOt!"
+  puts "\n#{@current_train.name} has been added successfully to #{@current_station.name}. wOOt!"
   puts "Would you like to add another? y/n"
   user_input = gets.chomp
   if user_input == 'y'
@@ -258,7 +277,8 @@ def add_train
   elsif user_input == 'n'
     menu(:conductor)
   else
-    puts "Does not compute. Please try again."
+    puts "\nDoes not compute. Please try again."
+    sleep (1)
     add_train
   end
 end
@@ -266,24 +286,24 @@ end
 def remove_stop which_menu
   case which_menu
   when :station
-    puts "Which train would you like to remove from #{@current_station.name}?"
+    puts "\nWhich train would you like to remove from #{@current_station.name}?"
     puts "Enter the number from above."
     user_input = gets.chomp
     @current_train = @current_station.trains[(user_input.to_i)-1]
     binding.pry
 
     @current_station.delete_stop(@current_train.id)
-    puts "#{@current_train.name} has been successfully removed from stop #{@current_station.name}."
+    puts "\n#{@current_train.name} has been successfully removed from stop #{@current_station.name}."
 
   when :train
-    puts "Which station would you like to remove from #{@current_train.name}?"
+    puts "\nWhich station would you like to remove from #{@current_train.name}?"
     puts "Enter the number from above."
     user_input = gets.chomp
     @current_station = @current_train.stations[(user_input.to_i)-1]
     binding.pry
 
     @current_train.delete_stop(@current_station.id)
-    puts "#{@current_station.name} stop has been successfully removed from line #{@current_train.name}."
+    puts "\n#{@current_station.name} stop has been successfully removed from line #{@current_train.name}."
   end
   menu(:conductor)
 end
